@@ -11,6 +11,7 @@ import education from "../views/education.vue";
 import contact from "../views/contact.vue";
 import other from "../views/other.vue";
 import test2 from "../views/test2.vue";
+import music from "../views/music.vue";
 
 
 // 配置路由
@@ -64,6 +65,11 @@ const routes = [
         path: '/test2',
         name: 'test2',
         component: test2
+    },
+    {
+        path: '/music',
+        name: 'music',
+        component: music
     },
 
 ]

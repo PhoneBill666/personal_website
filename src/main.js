@@ -14,6 +14,7 @@ import router from './router'  // 导入路由配置
 import BackToHome from '@/components/pagesHeader.vue'
 import MusicPlayer from '@/components/musicPlayer.vue'
 import MusicController1 from '@/components/musicController1.vue'
+import selfMusicController from '@/components/selfMusicController.vue'
 
 const app = createApp(App)
 
@@ -21,6 +22,7 @@ const app = createApp(App)
 app.component('BackToHome', BackToHome);
 app.component('MusicPlayer', MusicPlayer);
 app.component('MusicController1', MusicController1);
+app.component('selfMusicController', selfMusicController);
 app.use(ElementPlus)
 app.use(router)  // 使用 Vue Router
 app.mount('#app')
