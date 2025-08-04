@@ -42,7 +42,8 @@
         </div>
       </div>
       <!-- 右侧 -->
-      <div style="width: 600px; margin-top: 80px;"> 
+      <div style="width: 600px; margin-top: 80px;">
+
         <div style="display: flex;">
           <div class="profile-section">
             <div class="quote-container" style="width: 320px; height: 200px;">
