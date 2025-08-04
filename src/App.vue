@@ -12,8 +12,14 @@ onMounted(() => {
 
 <template>
 <div id="app" style="background-color: transparent; height: 100vh; width: 100%;">
-  <div>
-    <!-- <BubbleBackground /> -->
+<!--  <div>-->
+<!--    &lt;!&ndash; <BubbleBackground /> &ndash;&gt;-->
+<!--    <NewBackground />-->
+<!--  </div>-->
+  <div v-if="$route.path === '/music'">
+
+  </div>
+  <div v-else>
     <NewBackground />
   </div>
 <!--  <nav>-->
