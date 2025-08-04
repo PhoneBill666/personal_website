@@ -122,288 +122,294 @@ onMounted(() => {
 }
 </style> -->
 
+<!--<template>-->
+<!--  <div class="music-player">-->
+<!--    <div class="player-header">-->
+<!--      <el-icon class="music-icon"><Headset /></el-icon>-->
+<!--      <span class="player-title">Music Player</span>-->
+<!--    </div>-->
+<!--    -->
+<!--    <div class="player-content">-->
+<!--      <div class="song-info">-->
+<!--        <div class="song-name">{{ songName }}</div>-->
+<!--        <div class="time-info">{{ formatTime(currentTime) }} / {{ formatTime(duration) }}</div>-->
+<!--      </div>-->
+
+<!--      <div class="progress-bar">-->
+<!--        <el-slider-->
+<!--          v-model="currentTime"-->
+<!--          :max="duration"-->
+<!--          @input="seek"-->
+<!--          :show-tooltip="false"-->
+<!--        />-->
+<!--      </div>-->
+
+<!--      <div class="controls">-->
+<!--        <el-button circle @click="play" class="control-btn" v-if="!isPlaying">-->
+<!--          <el-icon :size="20"><VideoPlay /></el-icon>-->
+<!--        </el-button>-->
+<!--        <el-button circle @click="pause" class="control-btn" v-else>-->
+<!--          <el-icon :size="20"><VideoPause /></el-icon>-->
+<!--        </el-button>-->
+<!--        &lt;!&ndash; <el-button circle @click="stop" class="control-btn">-->
+<!--          <el-icon :size="20"><VideoStop /></el-icon>-->
+<!--        </el-button> &ndash;&gt;-->
+<!--      </div>-->
+
+<!--      <div class="volume-bars">-->
+<!--        <div v-for="n in 32" :key="n" -->
+<!--             class="volume-bar"-->
+<!--             :style="{ -->
+<!--               animationDelay: `${n * 0.1}s`,-->
+<!--               height: isPlaying ? `${Math.random() * 100}%` : '20px',-->
+<!--               transition: isPlaying ? 'height 0.1s ease' : 'none'-->
+<!--             }">-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div class="volume-control">-->
+<!--        <el-icon><Microphone /></el-icon>-->
+<!--        <el-slider-->
+<!--          v-model="volume"-->
+<!--          :max="1"-->
+<!--          :step="0.01"-->
+<!--          @input="changeVolume"-->
+<!--          :show-tooltip="false"-->
+<!--        />-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--    <audio ref="audio" @timeupdate="updateTime" @loadedmetadata="updateDuration">-->
+<!--      <source :src="audioSrc" type="audio/mp3" />-->
+<!--    </audio>-->
+<!--  </div>-->
+<!--</template>-->
+
+<!--<script setup>-->
+<!--import { ref, onMounted, onUnmounted } from 'vue'-->
+<!--import { Headset, VideoPlay, VideoPause, Microphone } from '@element-plus/icons-vue'-->
+
+<!--const audioSrc = new URL('@/components/music/EKKSTACY - i walk this earth all by myself (Explicit).mp3', import.meta.url).href-->
+<!--const songName = "i walk this earth all by myself"-->
+<!--const isPlaying = ref(false)-->
+<!--const duration = ref(0)-->
+<!--const currentTime = ref(0)-->
+<!--const volume = ref(0.5)-->
+<!--const audio = ref(null)-->
+
+<!--// 添加音量柱动画更新-->
+<!--const updateVolumeBars = () => {-->
+<!--  if (!isPlaying.value) return-->
+<!--  const bars = document.querySelectorAll('.volume-bar')-->
+<!--  bars.forEach(bar => {-->
+<!--    bar.style.height = `${Math.random() * 100}%`-->
+<!--  })-->
+<!--  requestAnimationFrame(updateVolumeBars)-->
+<!--}-->
+
+<!--const play = () => {-->
+<!--  audio.value.play()-->
+<!--  isPlaying.value = true-->
+<!--  updateVolumeBars()-->
+<!--}-->
+
+<!--const pause = () => {-->
+<!--  audio.value.pause()-->
+<!--  isPlaying.value = false-->
+<!--}-->
+
+<!--// 添加音频结束事件处理-->
+<!--const handleEnded = () => {-->
+<!--  audio.value.currentTime = 0-->
+<!--  audio.value.play()-->
+<!--}-->
+
+<!--const updateTime = () => {-->
+<!--  if (audio.value && audio.value.currentTime !== undefined) {-->
+<!--    currentTime.value = audio.value.currentTime-->
+<!--  }-->
+<!--}-->
+
+<!--const updateDuration = () => {-->
+<!--  if (audio.value && audio.value.duration !== undefined) {-->
+<!--    duration.value = audio.value.duration-->
+<!--  }-->
+<!--}-->
+
+<!--const seek = (value) => {-->
+<!--  if (audio.value) {-->
+<!--    audio.value.currentTime = value-->
+<!--  }-->
+<!--}-->
+
+<!--const changeVolume = (value) => {-->
+<!--  if (audio.value) {-->
+<!--    audio.value.volume = value-->
+<!--  }-->
+<!--}-->
+
+<!--const formatTime = (time) => {-->
+<!--  const minutes = Math.floor(time / 60)-->
+<!--  const seconds = Math.floor(time % 60)-->
+<!--  return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`-->
+<!--}-->
+
+<!--onMounted(() => {-->
+<!--  audio.value.volume = volume.value-->
+<!--  audio.value.addEventListener('ended', handleEnded)-->
+<!--})-->
+
+<!--// 组件卸载时移除事件监听-->
+<!--onUnmounted(() => {-->
+<!--  if (audio.value) {-->
+<!--    audio.value.removeEventListener('ended', handleEnded)-->
+<!--  }-->
+<!--})-->
+<!--</script>-->
+
+<!--<style scoped>-->
+<!--.music-player {-->
+<!--  width: 320px;-->
+<!--  background: rgba(255, 255, 255, 0.2);-->
+<!--  border-radius: 15px;-->
+<!--  padding: 20px;-->
+<!--  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);-->
+<!--  transition: transform 0.3s ease;-->
+<!--}-->
+
+<!--.music-player:hover {-->
+<!--  transform: translateY(-5px);-->
+<!--  background: rgba(255, 255, 255, 0.25);-->
+<!--}-->
+
+<!--.player-header {-->
+<!--  display: flex;-->
+<!--  align-items: center;-->
+<!--  gap: 10px;-->
+<!--  margin-bottom: 20px;-->
+<!--  color: white;-->
+<!--}-->
+
+<!--.music-icon {-->
+<!--  font-size: 24px;-->
+<!--}-->
+
+<!--.player-title {-->
+<!--  font-size: 20px;-->
+<!--  font-weight: bold;-->
+<!--  font-style: italic;-->
+<!--}-->
+
+<!--.player-content {-->
+<!--  display: flex;-->
+<!--  flex-direction: column;-->
+<!--  gap: 15px;-->
+<!--}-->
+
+<!--.song-info {-->
+<!--  text-align: center;-->
+<!--  color: white;-->
+<!--}-->
+
+<!--.song-name {-->
+<!--  font-size: 16px;-->
+<!--  font-weight: bold;-->
+<!--  margin-bottom: 5px;-->
+<!--}-->
+
+<!--.time-info {-->
+<!--  font-size: 14px;-->
+<!--  opacity: 0.8;-->
+<!--}-->
+
+<!--.progress-bar {-->
+<!--  padding: 0 10px;-->
+<!--}-->
+
+<!--.controls {-->
+<!--  display: flex;-->
+<!--  justify-content: center;-->
+<!--  gap: 15px;-->
+<!--}-->
+
+<!--.control-btn {-->
+<!--  background: rgba(255, 255, 255, 0.2);-->
+<!--  border: none;-->
+<!--  color: white;-->
+<!--  transition: all 0.3s ease;-->
+<!--  width: 40px;-->
+<!--  height: 40px;-->
+<!--  display: flex;-->
+<!--  align-items: center;-->
+<!--  justify-content: center;-->
+<!--}-->
+
+<!--.control-btn:hover {-->
+<!--  background: rgba(255, 255, 255, 0.3);-->
+<!--  transform: scale(1.1);-->
+<!--}-->
+
+<!--.volume-bars {-->
+<!--  display: flex;-->
+<!--  justify-content: center;-->
+<!--  align-items: flex-end;-->
+<!--  gap: 3px;-->
+<!--  height: 50px;-->
+<!--  margin: 10px 0;-->
+<!--  padding: 0 10px;-->
+<!--}-->
+
+<!--.volume-bar {-->
+<!--  width: 3.5px;-->
+<!--  background-color: white;-->
+<!--  border-radius: 2px;-->
+<!--  min-height: 2px;-->
+<!--}-->
+
+<!--.volume-control {-->
+<!--  display: flex;-->
+<!--  align-items: center;-->
+<!--  gap: 10px;-->
+<!--  color: white;-->
+<!--  padding: 0 10px;-->
+<!--  height: 32px;-->
+<!--}-->
+
+<!--.volume-control :deep(.el-slider) {-->
+<!--  margin-top: 2px;-->
+<!--}-->
+
+<!--:deep(.el-slider__runway) {-->
+<!--  background-color: var(&#45;&#45;el-slider-main-bg-color);-->
+<!--  opacity: 0.5;-->
+<!--}-->
+
+<!--:deep(.el-slider__bar) {-->
+<!--  background-color: #68bbde;-->
+<!--  opacity: 0.5;-->
+<!--}-->
+
+<!--:deep(.el-slider__button) {-->
+<!--  position: relative;-->
+<!--  top: -4px;-->
+<!--  width: 12px;-->
+<!--  height: 12px;-->
+<!--  border: none;-->
+<!--  background-color: white;-->
+<!--  border-radius: 50%;-->
+<!--  cursor: pointer;-->
+<!--}-->
+
+<!--:deep(.el-slider__button-wrapper) {-->
+<!--  width: 12px;-->
+<!--  height: 12px;-->
+<!--  top: -5px;-->
+<!--}-->
+<!--</style>-->
+
 <template>
-  <div class="music-player">
-    <div class="player-header">
-      <el-icon class="music-icon"><Headset /></el-icon>
-      <span class="player-title">Music Player</span>
-    </div>
-    
-    <div class="player-content">
-      <div class="song-info">
-        <div class="song-name">{{ songName }}</div>
-        <div class="time-info">{{ formatTime(currentTime) }} / {{ formatTime(duration) }}</div>
-      </div>
 
-      <div class="progress-bar">
-        <el-slider
-          v-model="currentTime"
-          :max="duration"
-          @input="seek"
-          :show-tooltip="false"
-        />
-      </div>
-
-      <div class="controls">
-        <el-button circle @click="play" class="control-btn" v-if="!isPlaying">
-          <el-icon :size="20"><VideoPlay /></el-icon>
-        </el-button>
-        <el-button circle @click="pause" class="control-btn" v-else>
-          <el-icon :size="20"><VideoPause /></el-icon>
-        </el-button>
-        <!-- <el-button circle @click="stop" class="control-btn">
-          <el-icon :size="20"><VideoStop /></el-icon>
-        </el-button> -->
-      </div>
-
-      <div class="volume-bars">
-        <div v-for="n in 32" :key="n" 
-             class="volume-bar"
-             :style="{ 
-               animationDelay: `${n * 0.1}s`,
-               height: isPlaying ? `${Math.random() * 100}%` : '20px',
-               transition: isPlaying ? 'height 0.1s ease' : 'none'
-             }">
-        </div>
-      </div>
-
-      <div class="volume-control">
-        <el-icon><Microphone /></el-icon>
-        <el-slider
-          v-model="volume"
-          :max="1"
-          :step="0.01"
-          @input="changeVolume"
-          :show-tooltip="false"
-        />
-      </div>
-    </div>
-
-    <audio ref="audio" @timeupdate="updateTime" @loadedmetadata="updateDuration">
-      <source :src="audioSrc" type="audio/mp3" />
-    </audio>
-  </div>
 </template>
-
-<script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
-import { Headset, VideoPlay, VideoPause, Microphone } from '@element-plus/icons-vue'
-
-const audioSrc = new URL('@/components/music/EKKSTACY - i walk this earth all by myself (Explicit).mp3', import.meta.url).href
-const songName = "i walk this earth all by myself"
-const isPlaying = ref(false)
-const duration = ref(0)
-const currentTime = ref(0)
-const volume = ref(0.5)
-const audio = ref(null)
-
-// 添加音量柱动画更新
-const updateVolumeBars = () => {
-  if (!isPlaying.value) return
-  const bars = document.querySelectorAll('.volume-bar')
-  bars.forEach(bar => {
-    bar.style.height = `${Math.random() * 100}%`
-  })
-  requestAnimationFrame(updateVolumeBars)
-}
-
-const play = () => {
-  audio.value.play()
-  isPlaying.value = true
-  updateVolumeBars()
-}
-
-const pause = () => {
-  audio.value.pause()
-  isPlaying.value = false
-}
-
-// 添加音频结束事件处理
-const handleEnded = () => {
-  audio.value.currentTime = 0
-  audio.value.play()
-}
-
-const updateTime = () => {
-  if (audio.value && audio.value.currentTime !== undefined) {
-    currentTime.value = audio.value.currentTime
-  }
-}
-
-const updateDuration = () => {
-  if (audio.value && audio.value.duration !== undefined) {
-    duration.value = audio.value.duration
-  }
-}
-
-const seek = (value) => {
-  if (audio.value) {
-    audio.value.currentTime = value
-  }
-}
-
-const changeVolume = (value) => {
-  if (audio.value) {
-    audio.value.volume = value
-  }
-}
-
-const formatTime = (time) => {
-  const minutes = Math.floor(time / 60)
-  const seconds = Math.floor(time % 60)
-  return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`
-}
-
-onMounted(() => {
-  audio.value.volume = volume.value
-  audio.value.addEventListener('ended', handleEnded)
-})
-
-// 组件卸载时移除事件监听
-onUnmounted(() => {
-  if (audio.value) {
-    audio.value.removeEventListener('ended', handleEnded)
-  }
-})
-</script>
-
 <style scoped>
-.music-player {
-  width: 320px;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 15px;
-  padding: 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  transition: transform 0.3s ease;
-}
 
-.music-player:hover {
-  transform: translateY(-5px);
-  background: rgba(255, 255, 255, 0.25);
-}
-
-.player-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
-  color: white;
-}
-
-.music-icon {
-  font-size: 24px;
-}
-
-.player-title {
-  font-size: 20px;
-  font-weight: bold;
-  font-style: italic;
-}
-
-.player-content {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.song-info {
-  text-align: center;
-  color: white;
-}
-
-.song-name {
-  font-size: 16px;
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-.time-info {
-  font-size: 14px;
-  opacity: 0.8;
-}
-
-.progress-bar {
-  padding: 0 10px;
-}
-
-.controls {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-}
-
-.control-btn {
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
-  color: white;
-  transition: all 0.3s ease;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.control-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: scale(1.1);
-}
-
-.volume-bars {
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  gap: 3px;
-  height: 50px;
-  margin: 10px 0;
-  padding: 0 10px;
-}
-
-.volume-bar {
-  width: 3.5px;
-  background-color: white;
-  border-radius: 2px;
-  min-height: 2px;
-}
-
-.volume-control {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: white;
-  padding: 0 10px;
-  height: 32px;
-}
-
-.volume-control :deep(.el-slider) {
-  margin-top: 2px;
-}
-
-:deep(.el-slider__runway) {
-  background-color: var(--el-slider-main-bg-color);
-  opacity: 0.5;
-}
-
-:deep(.el-slider__bar) {
-  background-color: #68bbde;
-  opacity: 0.5;
-}
-
-:deep(.el-slider__button) {
-  position: relative;
-  top: -4px;
-  width: 12px;
-  height: 12px;
-  border: none;
-  background-color: white;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-:deep(.el-slider__button-wrapper) {
-  width: 12px;
-  height: 12px;
-  top: -5px;
-}
 </style>
-
