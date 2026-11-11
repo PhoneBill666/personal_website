@@ -2,10 +2,9 @@
     <div>
         <BackToHome :pageName="'Other'" />
     </div>
-    <!-- <MusicController1/> -->
-    <div style="display: flex; justify-content: center; align-items: center; height: 600px;">
+    <div style="display: flex; justify-content: center; align-items: center; min-height: 400px; padding: 20px;">
         <div>
-            <p style="font-size: 40px; font-weight: bold;">Under Development, Stay Tuned...</p>
+            <p style="font-size: clamp(24px, 5vw, 40px); font-weight: bold; text-align: center;">Under Development, Stay Tuned...</p>
         </div>
     </div>
 </template>

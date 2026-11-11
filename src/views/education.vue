@@ -2,8 +2,8 @@
     <div>
         <BackToHome :pageName="'Education'" />
     </div>
-    <div style="display: flex; justify-content: left; align-items: center; height: 600px; margin-left: 200px;">
-    <el-timeline style="max-width: 600px">
+    <div class="timeline-container">
+    <el-timeline style="max-width: 600px; width: 100%;">
         <el-timeline-item timestamp="August 2023 - January 2024" placement="top">
             <el-card class="timeline-card">
                 <p class="timeline-card-header">Up Education</p>
@@ -15,9 +15,9 @@
                 <p class="timeline-card-header">The University of Auckland</p>
                 <p>Bachelor of Science, Computer Science </p>
                 <p>
-                    Relevant Papers: 
+                    Relevant Papers:
                     <span style="font-style: italic;">
-                        Principles of Programming, Introduction to Computer System, Intro to Practical Computing, Mathematics for Computer Science, 
+                        Principles of Programming, Introduction to Computer System, Intro to Practical Computing, Mathematics for Computer Science,
                         Intro to Software Fundamentals, Computer Organisation, Algorithms and Data Structures, Object Oriented Software Devel
                     </span>
                 </p>
@@ -32,6 +32,15 @@
 </script>
 
 <style scoped>
+.timeline-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    min-height: 400px;
+    padding: 20px;
+    padding-left: clamp(20px, 10vw, 200px);
+}
+
 .timeline-card {
     background-color: rgba(255, 255, 255, 0.25);
     border-radius: 10px;
@@ -42,7 +51,6 @@
 
 .timeline-card:hover {
     background-color: rgba(255, 255, 255, 0.35);
-    /* transition: background-color 0.3s ease; */
     transition: all 0.3s ease;
     transform: translateX(5px);
 }
@@ -64,4 +72,22 @@
     font-weight: bold;
 }
 
+@media (max-width: 768px) {
+    .timeline-container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .timeline-card {
+        font-size: 15px;
+    }
+
+    .timeline-card-header {
+        font-size: 18px;
+    }
+
+    :deep(.el-timeline-item__timestamp) {
+        font-size: 14px;
+    }
+}
 </style>

@@ -11,7 +11,7 @@ onMounted(() => {
 </script>
 
 <template>
-<div id="app" style="background-color: transparent; height: 100vh; width: 100%;">
+<div id="app" style="background-color: transparent; min-height: 100vh; width: 100%;">
 <!--  <div>-->
 <!--    &lt;!&ndash; <BubbleBackground /> &ndash;&gt;-->
 <!--    <NewBackground />-->

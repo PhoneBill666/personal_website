@@ -21,14 +21,14 @@
     <div class="main-content">
       <!-- 个人信息区域 -->
       <!-- 左侧 -->
-      <div style="width: 600px; margin-top: 200px;">
-        <div style="display: flex;">
+      <div class="left-column">
+        <div style="display: flex; align-items: center;">
             <img src="../components/images/PhoneBillCute.jpg" alt="PhoneBill" class="PhoneBill" />&nbsp;&nbsp;&nbsp;&nbsp;
             <div class="site-title">LikaiXu'Website</div>
         </div>
         <br>
         <div>
-          <div style="width: 320px; height: 100px;" class="quote-container">
+          <div class="quote-container quote-box">
               <div style="margin-bottom: 10px; font-size: 20px; font-style: italic;" class="gradient-text1">" Per aspera ad astra "</div>
               <div style="text-align: right; font-size: 18px; font-style: italic;" class="gradient-text2">循此苦旅，以达繁星</div>
           </div>
@@ -42,19 +42,18 @@
         </div>
       </div>
       <!-- 右侧 -->
-      <div style="width: 600px; margin-top: 80px;">
-        <div style="display: flex;">
+      <div class="right-column">
+        <div class="right-top-row">
           <div class="profile-section">
-            <div class="quote-container" style="width: 320px; height: 200px;">
+            <div class="quote-container info-card">
               <div>
                 <TypingText :texts="myTexts" :typingSpeed="150" :cursorBlinkSpeed="600" :delayBetweenTexts="2500" :maxWidth="310"/>
               </div>
             </div>
           </div>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <!-- 时间天气区域 -->
           <div class="info-section">
-            <div class="datetime-weather" style="width: 320px; height: 200px;">
+            <div class="datetime-weather info-card">
               <div>
                 <!-- 月，日，年 -->
                 <p>{{ formattedDate }}</p>
@@ -78,31 +77,28 @@
         <div class="nav-cards">
           <div class="nav-section">
             <h3 style="font-size: 30px; font-weight: bold; font-style: italic;">Tools</h3>
-            <div class="card-grid" style="display: flex;">
-              <div style="display: block;">
-                <div class="quote-container" style="width: 320px; height: 185px; margin-bottom: 40px; display: flex; align-items: center; justify-content: center;">
+            <div class="tools-grid">
+              <div class="tools-placeholder-column">
+                <div class="quote-container tools-placeholder-card">
                   <div style="display: flex; align-items: center; gap: 10px;">
-                    <img src="../components/icons/svgicons/develop.svg" style="width: 25px; height: 25px;"  >
+                    <img src="../components/icons/svgicons/develop.svg" style="width: 25px; height: 25px;">
                     <span>开发中</span>
                   </div>
                 </div>
-                <div class="quote-container" style="width: 320px; height: 185px; display: flex; align-items: center; justify-content: center;">
-                  <div style="display: flex; align-items: center; gap: 10px;">
-                    <img src="../components/icons/svgicons/develop.svg" style="width: 25px; height: 25px;"  >
-                    <span>开发中</span>
+                <!-- Resume Download Card -->
+                <div class="quote-container tools-placeholder-card resume-card" @click="downloadResume" style="cursor: pointer;">
+                  <div style="display: flex; align-items: center; gap: 12px;">
+                    <el-icon style="font-size: 28px;"><Document /></el-icon>
+                    <div>
+                      <div style="font-weight: bold; font-style: italic; font-size: 16px;">Resume / CV</div>
+                      <div style="font-size: 13px; opacity: 0.7; margin-top: 4px;">Click to download PDF</div>
+                    </div>
                   </div>
                 </div>
               </div>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <div>
+              <div class="tools-music">
                 <MusicController1/>
               </div>
-              <!-- <el-card v-for="item in navItems" :key="item.title" class="nav-card" @click="handleNavigation(item.link)">
-                <div class="card-content">
-                  <i :class="item.icon"></i>
-                  <span>{{ item.title }}</span>
-                </div>
-              </el-card> -->
             </div>
           </div>
         </div>
@@ -113,7 +109,7 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted, computed } from 'vue'
-import { Message, Share } from '@element-plus/icons-vue'
+import { Message, Share, Document } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router';  // 导入 Vue Router
 import { defineProps } from 'vue';       // Composition API 的定义属性函数
 import { Sunny, Cloudy, MostlyCloudy, PartlyCloudy, Drizzling, Pouring, Moon, Lightning, Sunset, MoonNight } from '@element-plus/icons-vue';
@@ -167,7 +163,7 @@ const updateTime = () => {
 onMounted(() => {
   updateTime()
   const timer = setInterval(updateTime, 1000)
-  
+
   onUnmounted(() => {
     clearInterval(timer)
   })
@@ -298,6 +294,11 @@ const getUserLocation = () => {
   }
 };
 
+// 下载简历
+const downloadResume = () => {
+  window.open('https://cdn.likaixu.com/Likai%20Xu%20CV.pdf', '_blank');
+};
+
 // 跳转至Github
 const goToGithub = () => {
   window.open('https://github.com/PhoneBill666', '_blank');
@@ -328,6 +329,7 @@ onMounted(() => {
   updateTime();
   setInterval(updateTime, 1000); // 每秒更新时间
   getUserLocation(); // 获取用户位置并查询天气
+
 });
 </script>
 
@@ -349,6 +351,8 @@ onMounted(() => {
   height: 45px;
   display: flex;
   justify-content: center;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 :deep(.el-menu) {
@@ -366,6 +370,7 @@ onMounted(() => {
   height: 45px;
   line-height: 45px;
   padding: 0 20px;
+  white-space: nowrap;
 }
 
 :deep(.el-menu-item.is-active) {
@@ -382,6 +387,36 @@ onMounted(() => {
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
+  padding-left: 20px;
+  padding-right: 20px;
+  gap: 40px;
+}
+
+.left-column {
+  flex: 1;
+  min-width: 0;
+  margin-top: 200px;
+}
+
+.right-column {
+  flex: 1;
+  min-width: 0;
+  margin-top: 80px;
+}
+
+.right-top-row {
+  display: flex;
+  gap: 20px;
+}
+
+.info-card {
+  width: 100%;
+  height: 200px;
+}
+
+.quote-box {
+  max-width: 320px;
+  height: 100px;
 }
 
 .profile-section {
@@ -389,6 +424,8 @@ onMounted(() => {
   flex-direction: column;
   align-items: center;
   gap: 20px;
+  flex: 1;
+  min-width: 0;
 }
 
 
@@ -397,10 +434,11 @@ onMounted(() => {
   height: 60px;
   border-radius: 50%;
   margin-bottom: 10px;
+  flex-shrink: 0;
 }
 
 .site-title {
-  font-size: 50px;
+  font-size: clamp(28px, 4vw, 50px);
   font-weight: bold;
   font-style: italic;
   color: #ffffff;
@@ -443,6 +481,8 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex: 1;
+  min-width: 0;
 }
 
 .datetime-weather {
@@ -484,11 +524,34 @@ onMounted(() => {
   font-size: 20px;
 }
 
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  /* gap: 20px; */
-  
+.tools-grid {
+  display: flex;
+  gap: 20px;
+}
+
+.tools-placeholder-column {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  flex: 1;
+  min-width: 0;
+}
+
+.tools-placeholder-card {
+  height: 185px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.resume-card {
+  justify-content: center;
+}
+
+.tools-music {
+  flex: 1;
+  min-width: 0;
 }
 
 .nav-card {
@@ -521,20 +584,6 @@ onMounted(() => {
   color: #ffffff;
 }
 
-@media (max-width: 768px) {
-  .main-content {
-    padding: 60px 20px;
-  }
-
-  .card-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .time {
-    font-size: 36px;
-  }
-}
-
 .gradient-text1 {
   font-weight: bold;
   background: linear-gradient(135deg, #4879a4 0%, #716dbb 100%);
@@ -548,6 +597,88 @@ onMounted(() => {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+/* 平板适配 */
+@media (max-width: 1024px) {
+  .main-content {
+    flex-direction: column;
+    padding-top: 70px;
+    gap: 20px;
+  }
+
+  .left-column {
+    margin-top: 20px;
+  }
+
+  .right-column {
+    margin-top: 0;
+  }
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  .nav-menu {
+    margin-top: 5px;
+    justify-content: flex-start;
+  }
+
+  :deep(.el-menu-item) {
+    font-size: 18px;
+    padding: 0 10px;
+  }
+
+  .main-content {
+    flex-direction: column;
+    padding: 60px 15px 30px;
+    gap: 15px;
+  }
+
+  .left-column {
+    margin-top: 10px;
+  }
+
+  .right-column {
+    margin-top: 0;
+  }
+
+  .site-title {
+    font-size: 28px;
+  }
+
+  .right-top-row {
+    flex-direction: column;
+  }
+
+  .info-card {
+    height: auto;
+    min-height: 150px;
+  }
+
+  .quote-box {
+    max-width: 100%;
+  }
+
+  .tools-grid {
+    flex-direction: column;
+  }
+
+  .tools-placeholder-column {
+    flex-direction: row;
+    gap: 15px;
+  }
+
+  .tools-placeholder-card {
+    height: 120px;
+  }
+
+  .time {
+    font-size: 36px;
+  }
+
+  .datetime-weather {
+    font-size: 16px;
+  }
 }
 
 /* #716dbb */

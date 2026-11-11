@@ -2,36 +2,33 @@
     <div>
         <BackToHome :pageName="'Experience'" />
     </div>
-    <div style="display: flex; justify-content: left; align-items: center; height: 600px; margin-left: 200px;">
-    <el-timeline style="max-width: 600px">
+    <div class="timeline-container">
+    <el-timeline style="max-width: 600px; width: 100%;">
+        <el-timeline-item timestamp="November 2025 - February 2026" placement="top">
+            <el-card class="timeline-card">
+                <p class="timeline-card-header">NTT DATA</p>
+                <p>Software Developer Intern • Onsite</p>
+                <p>Wuxi, China</p>
+                <ul style="font-style: italic; padding-left: 20px; margin-top: 8px;">
+                    <li>Developed an internal invoice query system based on OCR results using Vue 3 and Spring Boot</li>
+                    <li>Implemented multi-condition search and pagination features based on dynamic SQL queries using JdbcTemplate and PostgreSQL</li>
+                    <li>Built detail view pages aggregating data from multiple tables, including OCR results, invoice fields, and order information</li>
+                    <li>Implemented authentication flow using Redis-based token storage, combined with frontend route guards and backend interceptors</li>
+                    <li>Added CSV export functionality and search condition caching to improve usability for internal users</li>
+                </ul>
+            </el-card>
+        </el-timeline-item>
         <el-timeline-item timestamp="November 2024 - February 2025" placement="top">
             <el-card class="timeline-card">
                 <p class="timeline-card-header">Huaqin Technology</p>
                 <p>Software Engineer Intern • Onsite</p>
                 <p>Wuxi, Jiangsu, China</p>
-                <p>
-                    <span style="font-style: italic;">
-                        In the internship of front-end development, I mainly used Vue.js framework to participate in two projects, 
-                        the development of Wuling Automobile machine management system and the Party building management system of 
-                        National Software Park. Through these projects, I have accumulated a lot of work experience in the IT industry, 
-                        as well as practical experience in front-end technology and cross-functional collaboration.
-                    </span>
-                </p>
+                <ul style="font-style: italic; padding-left: 20px; margin-top: 8px;">
+                    <li>Used Vue.js framework to participate in the development of Wuling Automobile machine management system and the Party building management system of National Software Park</li>
+                    <li>Accumulated practical experience in front-end technology and cross-functional collaboration in the IT industry</li>
+                </ul>
             </el-card>
         </el-timeline-item>
-        <!-- <el-timeline-item timestamp="February 2024 - Current" placement="top">
-            <el-card class="timeline-card">
-                <p class="timeline-card-header">The University of Auckland</p>
-                <p>Bachelor of Science, Computer Science </p>
-                <p>
-                    Relevant Papers: 
-                    <span style="font-style: italic;">
-                        Principles of Programming, Introduction to Computer System, Intro to Practical Computing, Mathematics for Computer Science, 
-                        Intro to Software Fundamentals, Computer Organisation, Algorithms and Data Structures, Object Oriented Software Devel
-                    </span>
-                </p>
-            </el-card>
-        </el-timeline-item> -->
     </el-timeline>
     </div>
 </template>
@@ -41,6 +38,15 @@
 </script>
 
 <style scoped>
+.timeline-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    min-height: 400px;
+    padding: 20px;
+    padding-left: clamp(20px, 10vw, 200px);
+}
+
 .timeline-card {
     background-color: rgba(255, 255, 255, 0.25);
     border-radius: 10px;
@@ -51,7 +57,6 @@
 
 .timeline-card:hover {
     background-color: rgba(255, 255, 255, 0.35);
-    /* transition: background-color 0.3s ease; */
     transition: all 0.3s ease;
     transform: translateX(5px);
 }
@@ -73,4 +78,22 @@
     font-weight: bold;
 }
 
+@media (max-width: 768px) {
+    .timeline-container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .timeline-card {
+        font-size: 15px;
+    }
+
+    .timeline-card-header {
+        font-size: 18px;
+    }
+
+    :deep(.el-timeline-item__timestamp) {
+        font-size: 14px;
+    }
+}
 </style>

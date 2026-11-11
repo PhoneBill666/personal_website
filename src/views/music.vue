@@ -1,9 +1,9 @@
 <!--自用音乐播放器-->
 <!--使用SelfMusicService.js作为配置文件-->
 <template>
-  <div class="bg-box" style="height: 100vh; width: 100%">
+  <div class="bg-box" style="min-height: 100vh; width: 100%">
     <pageHeader/>
-    <div style="display: flex; flex-direction: column; align-items: center; margin-top: 130px">
+    <div style="display: flex; flex-direction: column; align-items: center; padding: 80px 15px 30px;">
       <self-music-controller/>
     </div>
   </div>

@@ -68,11 +68,11 @@ import musicService from '@/MusicService'
 const props = defineProps({
   width: {
     type: String,
-    default: '320px'
+    default: '100%'
   },
   height: {
     type: String,
-    default: '410px'
+    default: 'auto'
   }
 })
 
@@ -180,7 +180,7 @@ onMounted(() => {
   padding: 20px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   transition: transform 0.3s ease;
-  height: v-bind('height');
+  max-width: 320px;
 }
 
 .music-player:hover {

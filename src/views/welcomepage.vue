@@ -1,5 +1,5 @@
 <template>
-  <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+  <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 800px;">
     <el-card shadow="always" class="profile-card" style="background-color: transparent; border-color: transparent">
       <div style="text-align: center">
         <h1 class="inside-card-style">Welcome to Likai Xu's website!</h1>
@@ -42,24 +42,16 @@ export default {
 <style scoped>
 .profile-card {
   border-radius: 20px;
-  width: 800px;
-  height: 200px;
-
+  width: 100%;
+  min-height: 150px;
 }
 
 .inside-card-style {
-  font-size: 50px;
+  font-size: clamp(24px, 5vw, 50px);
   color: white;
   font-weight: bold;
   z-index: 1;
   text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
-}
-
-.card-position {
-  display: flex;
-  justify-content: center;  /* 水平居中 */
-  align-items: center;  /* 垂直居中 */
-  height: 100vh;
 }
 
 .click-button {
@@ -70,7 +62,7 @@ export default {
   width: 100%;
   height: 100%;
   animation: fadeIn 2s infinite alternate;
-  font-size: 20px;
+  font-size: clamp(14px, 3vw, 20px);
 }
 
 /* 定义动画 */

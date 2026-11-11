@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; justify-content: space-between; margin-bottom: 30px">
+  <div class="header-container">
     <div class="back-to-home">
       <a @click="goBack" type="text" size="small" class="back-button">
         Back
@@ -7,7 +7,7 @@
       <span class="page-name">&nbsp;&nbsp;/&nbsp;&nbsp;</span>
       <span class="page-name">{{ pageName }}</span>
     </div>
-    <div style="margin-top: 15px;">
+    <div class="header-right">
       <span class="page-name">{{ currentTime }}</span>&nbsp;&nbsp;&nbsp;&nbsp;
       <!-- 显示天气图标和天气信息 -->
       <span class="page-name">
@@ -171,10 +171,26 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.header-container {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 30px;
+  padding: 10px 15px;
+}
+
 .back-to-home {
   display: flex;
   align-items: center;
-  margin-left: 20px;
+  margin-top: 15px;
+}
+
+.header-right {
   margin-top: 15px;
 }
 
@@ -199,5 +215,26 @@ onMounted(() => {
   margin-right: 8px;
   font-size: 38px; /* Adjusted icon size */
   vertical-align: middle; /* Align icon vertically with text */
+}
+
+@media (max-width: 768px) {
+  .header-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .back-button,
+  .page-name {
+    font-size: 20px;
+  }
+
+  .weather-icon {
+    font-size: 28px;
+  }
+
+  .header-right {
+    margin-top: 0;
+  }
 }
 </style>

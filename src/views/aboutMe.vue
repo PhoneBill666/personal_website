@@ -3,29 +3,22 @@
     <BackToHome :pageName="'About me'" />
     <!-- 这里你可以用其他页面名称替代 'About Us' -->
   </div>
-  <div style="place-items: center;">
-    <div style="display: flex; width: 1000px">
-      <!-- 侧边栏锚点导航 -->
-      <!--      <el-anchor class="fixed-anchor">-->
-      <!--        <el-anchor-link href="#About-me" title="About me"></el-anchor-link>-->
-      <!--        <el-anchor-link href="#section2" title="部分 2"></el-anchor-link>-->
-      <!--        <el-anchor-link href="#section3" title="部分 3"></el-anchor-link>-->
-      <!--      </el-anchor>-->
-
+  <div class="about-container">
+    <div class="about-content">
       <!-- 右侧内容 -->
-      <div style="margin-left: 50px; padding-top: 20px">
-        <h2 id="About-me" style="font-weight: bold; font-size: 25px">Quickly know me!</h2>
+      <div class="cards-wrapper">
+        <h2 id="About-me" class="section-heading">Quickly know me!</h2>
         <br>
         <br>
-        <el-row>
-          <el-card style="max-width: 220px; margin-right: 30px" class="profile-card">
+        <div class="card-row">
+          <el-card class="profile-card card-profile">
             <img src="../components/images/PhoneBillCute.jpg" class="circle-image"/>
             <p class="inside-card-title">Likai Xu</p>
             <p class="inside-card-content">Undergraduate Student</p>
             <p class="inside-card-content">@ University of Auckland</p>
           </el-card>
 
-          <el-card style="max-width: 450px; max-height: 280px; margin-right: 30px" class="profile-card">
+          <el-card class="profile-card card-experience">
             <p class="inside-card-title-top-left" style="color: #062c48; font-size: 23px;">Experiences:</p>
             <p class="inside-card-title-2">Software Developer Intern</p>
             <p class="inside-card-content-left" style="font-style: italic">Huaqin Technology</p>
@@ -34,7 +27,7 @@
             <p class="inside-card-content-left">Developed the Wuling Vehicle Management System and the Party Building System for the National Software Park using the Vue framework and React.js, contributing to the front-end development and ensuring efficient user interface design and functionality.</p>
           </el-card>
 
-          <el-card style="max-width: 200px;" class="profile-card">
+          <el-card class="profile-card card-tags">
             <p class="inside-card-title-top-left">Tags:</p>
             <el-tag class="tag-background" style="margin-bottom: 10px; margin-top: 10px" type="primary">Frontend Development</el-tag>&nbsp;&nbsp;
             <el-tag class="tag-background" style="margin-bottom: 10px" type="success">JavaScript</el-tag>&nbsp;&nbsp;
@@ -47,10 +40,10 @@
             <el-tag class="tag-background" style="margin-bottom: 10px" type="warning">Team Working</el-tag>&nbsp;&nbsp;
 
           </el-card>
-        </el-row>
+        </div>
         <br>
-        <el-row>
-          <el-card style="max-width: 320px; max-height: 165px; margin-right: 30px" class="profile-card">
+        <div class="card-row">
+          <el-card class="profile-card card-detail">
             <p class="inside-card-title-top-left">Detail:</p>
             <p class="inside-card-content-left">Hi! I'm Likai Xu, you can also call me Bill.</p>
             <p class="inside-card-content-left">Student of The University of Auckland</p>
@@ -58,7 +51,7 @@
             <p class="inside-card-content-left">Now living in Auckland, NewZealand</p>
           </el-card>
 
-          <el-card style="max-width: 400px; max-height: 165px; margin-right: 30px" class="profile-card">
+          <el-card class="profile-card card-character">
             <p class="inside-card-title-top-left">Personal character:</p>
             <p class="inside-card-content-left">Always passionate and willing to challenge myself</p>
             <p class="inside-card-content-left">Love learning new things</p>
@@ -66,7 +59,7 @@
             <p class="inside-card-content-left">Very considerate of others' feelings</p>
           </el-card>
 
-          <el-card style="max-width: 180px;" class="profile-card">
+          <el-card class="profile-card card-hobbies">
             <p class="inside-card-title-top-left">Hobbies:</p>
             <p class="inside-card-content-left">Programming</p>
             <p class="inside-card-content-left">Gaming:</p>
@@ -75,45 +68,73 @@
             <p class="inside-card-content-left" >Sports:</p>
             <p class="inside-card-content-left" style="font-style: italic">Football</p>
           </el-card>
-
-
-        </el-row>
-        <!--        <h2 id="section2">部分 2</h2>-->
-        <!--        <p>这是第二部分的内容</p>-->
-        <!--        <p>这是第二部分的内容</p>-->
-
-        <!--        <h2 id="section3">部分 3</h2>-->
-        <!--        <p>这是第三部分的内容</p>-->
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-// import BackToHome from '@/components/pagesHeader.vue'
-// export default {
-//   name: 'homepage',
-
-//   components: {
-//     BackToHome,
-//   }
-// }
 </script>
 
 <style scoped>
-.fixed-anchor {
-  position: fixed;
-  top: 30px; /* 距离顶部 100px */
-  left: 100px; /* 距离左侧 20px */
-  width: 100px; /* 设定宽度 */
-  height: 300px;
-  background-color: transparent;
-  box-shadow: none;
-
+.about-container {
+  display: flex;
+  justify-content: center;
+  padding: 0 15px;
 }
 
-::v-deep .el-anchor__link:hover {
-  background: none !important;
+.about-content {
+  width: 100%;
+  max-width: 1000px;
+}
+
+.cards-wrapper {
+  padding-top: 20px;
+}
+
+.section-heading {
+  font-weight: bold;
+  font-size: 25px;
+}
+
+.card-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.card-profile {
+  width: 220px;
+  flex-shrink: 0;
+}
+
+.card-experience {
+  flex: 1;
+  min-width: 250px;
+  max-width: 450px;
+}
+
+.card-tags {
+  width: 200px;
+  flex-shrink: 0;
+}
+
+.card-detail {
+  flex: 1;
+  min-width: 220px;
+  max-width: 320px;
+}
+
+.card-character {
+  flex: 1;
+  min-width: 250px;
+  max-width: 400px;
+}
+
+.card-hobbies {
+  width: 180px;
+  flex-shrink: 0;
 }
 
 .profile-card {
@@ -200,11 +221,30 @@
 :deep(.el-tag--danger) {
   color: #b71c1c;
 }
-</style>
 
-<!--@media (hover: hover) {-->
-<!--.fixed-anchor ::v-deep(.el-anchor__item) .el-anchor__link:hover {-->
-<!--background-color: transparent !important;-->
-<!--/* 如果无效尝试：background: none !important; */-->
-<!--}-->
-<!--}-->
+@media (max-width: 768px) {
+  .card-row {
+    flex-direction: column;
+  }
+
+  .card-profile,
+  .card-experience,
+  .card-tags,
+  .card-detail,
+  .card-character,
+  .card-hobbies {
+    width: 100%;
+    max-width: 100%;
+    flex-shrink: 1;
+  }
+
+  .circle-image {
+    max-width: 120px;
+    max-height: 120px;
+  }
+
+  .section-heading {
+    font-size: 22px;
+  }
+}
+</style>

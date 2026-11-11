@@ -84,10 +84,9 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* 限制宽度为视口宽度 */
-  width: 100vw;  /* 限制宽度为视口宽度 */
-  height: 100vh; /* 限制高度为视口高度 */
-  overflow: hidden; /* 隐藏滚动条，禁止滚动 */
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
   margin: 0;
   padding: 0;
 }
