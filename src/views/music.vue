@@ -2,7 +2,7 @@
 <!--使用SelfMusicService.js作为配置文件-->
 <template>
   <div class="bg-box" style="min-height: 100vh; width: 100%">
-    <pageHeader/>
+    <pageHeader page-name="Music"/>
     <div style="display: flex; flex-direction: column; align-items: center; padding: 80px 15px 30px;">
       <self-music-controller/>
     </div>
@@ -10,7 +10,13 @@
 </template>
 
 <script setup>
-import MusicPlayer from '@/components/musicPlayer.vue'
+// Element Plus is only used on this page, so its styles load with this route.
+import 'element-plus/theme-chalk/base.css'
+import 'element-plus/theme-chalk/el-button.css'
+import 'element-plus/theme-chalk/el-icon.css'
+import 'element-plus/theme-chalk/el-slider.css'
+import 'element-plus/theme-chalk/el-tooltip.css'
+import 'element-plus/theme-chalk/el-popper.css'
 import pageHeader from '@/components/pagesHeader.vue'
 import SelfMusicController from "@/components/selfMusicController.vue";
 

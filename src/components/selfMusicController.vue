@@ -60,6 +60,7 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { Headset, VideoPlay, VideoPause, Microphone } from '@element-plus/icons-vue'
+import { ElSlider, ElButton, ElIcon } from 'element-plus'
 import LastSong from '@/components/icons/svgicons/lastsong.svg'
 import NextSong from '@/components/icons/svgicons/nextsong.svg'
 import selfMusicService from '@/SelfMusicService.js'

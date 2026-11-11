@@ -25,6 +25,7 @@ import { useRouter } from 'vue-router';  // 导入 Vue Router
 import { defineProps } from 'vue';       // Composition API 的定义属性函数
 import { ref, onMounted } from 'vue';    // Composition API 引入 ref 和生命周期函数
 import { Sunny, Cloudy, MostlyCloudy, PartlyCloudy, Drizzling, Pouring, Moon, Lightning, Sunset, MoonNight } from '@element-plus/icons-vue'; // Use existing icons
+import { ElIcon } from 'element-plus';
 
 // 定义组件属性
 const props = defineProps({
