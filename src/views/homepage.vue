@@ -1,685 +1,1307 @@
 <template>
-  <div class="homepage-container">
-    <!-- 顶部导航栏 -->
-    <el-menu
-      mode="horizontal"
-      :router="true"
-      class="nav-menu"
-      background-color="transparent"
-      text-color="#000000"
-      active-text-color="#000000"
-    >
-      <el-menu-item index="/aboutme">About me</el-menu-item>
-      <el-menu-item index="/experience">Experience</el-menu-item>
-      <el-menu-item index="/education">Education</el-menu-item>
-      <el-menu-item index="/skills">Skills</el-menu-item>
-      <el-menu-item index="/contact">Contact</el-menu-item>
-      <el-menu-item index="/other">Other</el-menu-item>
-    </el-menu>
+  <div class="home">
+    <a class="skip-link" href="#about">Skip to content</a>
+    <SiteNav
+      :sections="navSections"
+      :active="active"
+      :scrolled="scrolled"
+      :progress="progress"
+      :cv-url="profile.cvUrl"
+    />
 
-    <!-- 主要内容区域 -->
-    <div class="main-content">
-      <!-- 个人信息区域 -->
-      <!-- 左侧 -->
-      <div class="left-column">
-        <div style="display: flex; align-items: center;">
-            <img src="../components/images/PhoneBillCute.jpg" alt="PhoneBill" class="PhoneBill" />&nbsp;&nbsp;&nbsp;&nbsp;
-            <div class="site-title">LikaiXu'Website</div>
-        </div>
-        <br>
-        <div>
-          <div class="quote-container quote-box">
-              <div style="margin-bottom: 10px; font-size: 20px; font-style: italic;" class="gradient-text1">" Per aspera ad astra "</div>
-              <div style="text-align: right; font-size: 18px; font-style: italic;" class="gradient-text2">循此苦旅，以达繁星</div>
+    <main>
+      <!-- Hero -->
+      <section id="top" class="hero container">
+        <div class="hero-copy">
+          <p v-reveal class="status">
+            <span class="pulse" aria-hidden="true"></span>
+            {{ profile.status }} · Auckland
+          </p>
+          <h1 v-reveal="80" class="hero-title">
+            <span class="hello">Hi, I'm</span>
+            {{ profile.name }}<span class="dot">.</span>
+          </h1>
+          <p v-reveal="160" class="hero-role">
+            Full-stack developer building
+            <span class="typed">{{ typed }}</span><span class="caret" aria-hidden="true"></span>
+          </p>
+          <p v-reveal="240" class="hero-lead">{{ profile.headline }}</p>
+          <div v-reveal="320" class="hero-cta">
+            <a class="btn btn-primary" :href="profile.cvUrl" target="_blank" rel="noopener">
+              <AppIcon name="download" :size="18" />
+              Download CV
+            </a>
+            <a class="btn btn-ghost" href="#experience" @click.prevent="scrollToId('experience')">
+              See my work
+              <AppIcon name="arrow-right" :size="18" />
+            </a>
+          </div>
+          <div v-reveal="400" class="socials">
+            <a class="icon-btn" :href="profile.links.github" target="_blank" rel="noopener" aria-label="GitHub">
+              <AppIcon name="github" />
+            </a>
+            <a class="icon-btn" :href="profile.links.linkedin" target="_blank" rel="noopener" aria-label="LinkedIn">
+              <AppIcon name="linkedin" />
+            </a>
+            <button class="icon-btn" type="button" aria-label="Copy email address" @click="copyEmail">
+              <AppIcon :name="copied ? 'check' : 'mail'" />
+            </button>
+            <button class="icon-btn" type="button" aria-label="Share this site" @click="shareSite">
+              <AppIcon name="share" />
+            </button>
           </div>
         </div>
-        <br>
-        <div style="cursor: pointer;">
-          <img src="../components/icons/svgicons/github.svg" style="width: 25px; height: 25px;" @click="goToGithub">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <img src="../components/icons/svgicons/linkedin.svg" style="width: 25px; height: 25px; color: black;" @click="goToLinkedin">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <el-icon style="font-size: 25px;" @click="handleMessage"><Message /></el-icon>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <el-icon style="font-size: 25px;" @click="shareWebsite"><Share /></el-icon>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        </div>
-      </div>
-      <!-- 右侧 -->
-      <div class="right-column">
-        <div class="right-top-row">
-          <div class="profile-section">
-            <div class="quote-container info-card">
-              <div>
-                <TypingText :texts="myTexts" :typingSpeed="150" :cursorBlinkSpeed="600" :delayBetweenTexts="2500" :maxWidth="310"/>
+
+        <aside v-reveal="220" v-spotlight class="hero-card glass" aria-label="Quick facts">
+          <div class="card-top">
+            <div class="avatar-ring">
+              <img :src="avatar" alt="Likai's avatar" width="76" height="76" />
+            </div>
+            <div>
+              <p class="card-name">{{ profile.name }} <span>· {{ profile.nickname }}</span></p>
+              <p class="card-meta"><AppIcon name="map-pin" :size="14" />{{ profile.location }}</p>
+            </div>
+          </div>
+          <div class="now">
+            <div class="now-cell">
+              <span class="now-label">Local time</span>
+              <span class="now-value">{{ time || '--:--' }}</span>
+              <span class="now-sub">{{ date }}</span>
+            </div>
+            <div class="now-cell">
+              <span class="now-label">Weather</span>
+              <span class="now-value">{{ weather ? weather.icon + ' ' + weather.temp + '°' : '—' }}</span>
+              <span class="now-sub">{{ weather ? weather.label : 'Auckland' }}</span>
+            </div>
+          </div>
+          <ul class="facts plain-list">
+            <li v-for="fact in profile.facts" :key="fact.label">
+              <strong>{{ fact.value }}</strong>
+              <span>{{ fact.label }}</span>
+            </li>
+          </ul>
+          <p class="quote">
+            <em>“{{ profile.quote.latin }}”</em>
+            <span>{{ profile.quote.chinese }}</span>
+          </p>
+        </aside>
+
+        <a class="scroll-cue" href="#about" aria-label="Scroll to About" @click.prevent="scrollToId('about')">
+          <span></span>
+        </a>
+      </section>
+
+      <!-- About -->
+      <section id="about" class="section container">
+        <header v-reveal class="section-head">
+          <span class="eyebrow">About</span>
+          <h2 class="section-title">A developer who likes <br />the whole picture.</h2>
+        </header>
+        <div class="about-grid">
+          <div v-reveal class="about-copy">
+            <p v-for="(paragraph, i) in about.paragraphs" :key="i">{{ paragraph }}</p>
+            <div class="interests">
+              <span class="interests-label">Off the clock</span>
+              <div class="chips">
+                <template v-for="item in about.interests" :key="item.label">
+                  <router-link v-if="item.to" :to="item.to" class="chip chip-link">
+                    <span aria-hidden="true">{{ item.emoji }}</span>{{ item.label }}
+                  </router-link>
+                  <span v-else class="chip"><span aria-hidden="true">{{ item.emoji }}</span>{{ item.label }}</span>
+                </template>
               </div>
             </div>
           </div>
-          <!-- 时间天气区域 -->
-          <div class="info-section">
-            <div class="datetime-weather info-card">
-              <div>
-                <!-- 月，日，年 -->
-                <p>{{ formattedDate }}</p>
-                <p class="page-name">{{ currentTime }}</p>
-                <br>
-                <!-- 显示天气图标和天气信息 -->
-                <p class="page-name">
-                  {{ weatherInfo }}
-                  <el-icon v-if="weatherInfo" class="weather-icon">
-                    <component :is="weatherIcon" />  <!-- 动态选择图标 -->
-                  </el-icon>
-                </p>
-              </div>
-            </div>
+          <div class="strengths">
+            <article
+              v-for="(item, i) in about.strengths"
+              :key="item.title"
+              v-reveal="i * 90"
+              v-spotlight
+              class="strength glass"
+            >
+              <span class="strength-icon"><AppIcon :name="item.icon" :size="20" /></span>
+              <h3>{{ item.title }}</h3>
+              <p>{{ item.text }}</p>
+            </article>
           </div>
         </div>
-        <br>
-        <br>
-        <br>
-        <!-- 导航卡片区域 -->
-        <div class="nav-cards">
-          <div class="nav-section">
-            <h3 style="font-size: 30px; font-weight: bold; font-style: italic;">Tools</h3>
-            <div class="tools-grid">
-              <div class="tools-placeholder-column">
-                <div class="quote-container tools-placeholder-card">
-                  <div style="display: flex; align-items: center; gap: 10px;">
-                    <img src="../components/icons/svgicons/develop.svg" style="width: 25px; height: 25px;">
-                    <span>开发中</span>
-                  </div>
+      </section>
+
+      <!-- Experience -->
+      <section id="experience" class="section container">
+        <header v-reveal class="section-head">
+          <span class="eyebrow">Experience</span>
+          <h2 class="section-title">Two internships, two very <br />different starting points.</h2>
+        </header>
+        <ol class="timeline plain-list">
+          <li v-for="(job, i) in experience" :key="job.company" v-reveal="i * 100" class="timeline-item">
+            <span class="timeline-dot" aria-hidden="true"></span>
+            <article v-spotlight class="job glass">
+              <header class="job-head">
+                <div>
+                  <h3>{{ job.company }}</h3>
+                  <p class="job-role">{{ job.role }} <span>· {{ job.place }}</span></p>
                 </div>
-                <!-- Resume Download Card -->
-                <div class="quote-container tools-placeholder-card resume-card" @click="downloadResume" style="cursor: pointer;">
-                  <div style="display: flex; align-items: center; gap: 12px;">
-                    <el-icon style="font-size: 28px;"><Document /></el-icon>
-                    <div>
-                      <div style="font-weight: bold; font-style: italic; font-size: 16px;">Resume / CV</div>
-                      <div style="font-size: 13px; opacity: 0.7; margin-top: 4px;">Click to download PDF</div>
-                    </div>
-                  </div>
-                </div>
+                <span class="period">{{ job.period }}</span>
+              </header>
+              <p class="job-summary">{{ job.summary }}</p>
+              <ul class="points plain-list">
+                <li v-for="point in job.points" :key="point">{{ point }}</li>
+              </ul>
+              <div class="chips">
+                <span v-for="tech in job.tech" :key="tech" class="chip">{{ tech }}</span>
               </div>
-              <div class="tools-music">
-                <MusicController1/>
-              </div>
+            </article>
+          </li>
+        </ol>
+        <p v-reveal class="footnote">
+          Both were internal systems, so the code isn't public — I'm happy to walk through the architecture and trade-offs in an interview.
+        </p>
+      </section>
+
+      <!-- Projects -->
+      <section id="projects" class="section container">
+        <header v-reveal class="section-head">
+          <span class="eyebrow">Projects</span>
+          <h2 class="section-title">Things I've built.</h2>
+        </header>
+
+        <article v-reveal v-spotlight class="featured glass">
+          <div class="featured-intro">
+            <span class="featured-tag">Featured · {{ featured.period }}</span>
+            <h3>{{ featured.name }}</h3>
+            <p class="featured-kind">{{ featured.kind }}</p>
+            <p class="featured-role">{{ featured.role }}</p>
+            <p class="featured-summary">{{ featured.summary }}</p>
+            <div class="chips">
+              <span v-for="tech in featured.tech" :key="tech" class="chip">{{ tech }}</span>
             </div>
+            <a class="btn btn-ghost btn-sm featured-link" :href="featured.url" target="_blank" rel="noopener">
+              {{ featured.linkLabel }}
+              <AppIcon name="arrow-up-right" :size="16" />
+            </a>
           </div>
+          <ul class="featured-points plain-list">
+            <li v-for="point in featured.points" :key="point">
+              <AppIcon name="check-circle" :size="18" />
+              <span>{{ point }}</span>
+            </li>
+          </ul>
+        </article>
+
+        <div class="project-grid">
+          <article
+            v-for="(project, i) in otherProjects"
+            :key="project.name"
+            v-reveal="i * 100"
+            v-spotlight
+            class="project glass"
+          >
+            <span class="project-kind">{{ project.kind }}</span>
+            <h3>{{ project.name }}</h3>
+            <p>{{ project.summary }}</p>
+            <div class="chips">
+              <span v-for="tech in project.tech" :key="tech" class="chip">{{ tech }}</span>
+            </div>
+            <a v-if="project.url" class="project-link" :href="project.url" target="_blank" rel="noopener">
+              {{ project.linkLabel || 'Open' }}
+              <AppIcon name="arrow-up-right" :size="15" />
+            </a>
+          </article>
         </div>
-      </div>
-    </div>
+      </section>
+
+      <!-- Skills -->
+      <section id="skills" class="section container">
+        <header v-reveal class="section-head">
+          <span class="eyebrow">Skills</span>
+          <h2 class="section-title">Tools I reach for.</h2>
+          <p class="section-lead">Hover or tap a skill to see where I've actually used it.</p>
+        </header>
+        <div class="skills-grid">
+          <article
+            v-for="(group, i) in skillGroups"
+            :key="group.title"
+            v-reveal="i * 70"
+            class="skill-group glass"
+          >
+            <h3>{{ group.title }}</h3>
+            <div class="chips">
+              <button
+                v-for="skill in group.skills"
+                :key="skill.name"
+                type="button"
+                class="chip skill-chip"
+                :class="{ active: activeSkill && activeSkill.name === skill.name }"
+                @mouseenter="selectSkill(group, skill)"
+                @focus="selectSkill(group, skill)"
+                @click="selectSkill(group, skill)"
+              >{{ skill.name }}</button>
+            </div>
+            <p class="used-in" aria-live="polite">
+              <template v-if="activeSkill && activeSkill.group === group.title">
+                <strong>{{ activeSkill.name }}</strong> → {{ activeSkill.where.join(' · ') }}
+              </template>
+              <template v-else>&nbsp;</template>
+            </p>
+          </article>
+        </div>
+        <p v-reveal class="also-used">
+          Also worked with: <span>{{ alsoUsed.join(' · ') }}</span>
+        </p>
+      </section>
+
+      <!-- Education -->
+      <section id="education" class="section container">
+        <header v-reveal class="section-head">
+          <span class="eyebrow">Education</span>
+          <h2 class="section-title">Where I studied.</h2>
+        </header>
+        <div class="edu-grid">
+          <article
+            v-for="(item, i) in education"
+            :key="item.school"
+            v-reveal="i * 100"
+            v-spotlight
+            class="edu glass"
+            :class="{ 'edu-main': item.courses }"
+          >
+            <span class="period">{{ item.period }}</span>
+            <h3>{{ item.school }}</h3>
+            <p class="edu-degree">{{ item.degree }}</p>
+            <p v-if="item.highlight" class="edu-highlight">★ {{ item.highlight }}</p>
+            <div v-if="item.courses" class="chips">
+              <span v-for="course in item.courses" :key="course" class="chip">{{ course }}</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Contact -->
+      <section id="contact" class="section container">
+        <div v-reveal v-spotlight class="contact glass">
+          <span class="eyebrow">Contact</span>
+          <h2 class="section-title">Let's talk.</h2>
+          <p class="section-lead">
+            I'm looking for graduate and junior developer roles in Auckland. If you're hiring — or just want to talk about a project — my inbox is open.
+          </p>
+          <div class="email-row">
+            <a class="email" :href="'mailto:' + profile.email">{{ profile.email }}</a>
+            <button class="btn btn-ghost btn-sm" type="button" @click="copyEmail">
+              <AppIcon :name="copied ? 'check' : 'copy'" :size="16" />
+              {{ copied ? 'Copied' : 'Copy' }}
+            </button>
+          </div>
+          <div class="contact-actions">
+            <a class="btn btn-primary" :href="profile.cvUrl" target="_blank" rel="noopener">
+              <AppIcon name="download" :size="18" />
+              Download CV
+            </a>
+            <a class="btn btn-ghost" :href="profile.links.linkedin" target="_blank" rel="noopener">
+              <AppIcon name="linkedin" :size="18" />
+              LinkedIn
+            </a>
+            <a class="btn btn-ghost" :href="profile.links.github" target="_blank" rel="noopener">
+              <AppIcon name="github" :size="18" />
+              GitHub
+            </a>
+          </div>
+          <p class="contact-time">
+            It's <strong>{{ time || '--:--' }}</strong> in Auckland right now.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer container">
+      <p class="footer-quote"><em>{{ profile.quote.latin }}</em> · {{ profile.quote.chinese }}</p>
+      <p>
+        © {{ year }} {{ profile.name }} · Built with Vue 3 &amp; Vite ·
+        <router-link to="/music">Late-night playlist →</router-link>
+      </p>
+    </footer>
+
+    <transition name="fade">
+      <button v-if="showTop" class="to-top icon-btn" type="button" aria-label="Back to top" @click="toTop">
+        <AppIcon name="arrow-up" />
+      </button>
+    </transition>
+
+    <transition name="toast">
+      <div v-if="toast" class="toast" role="status">{{ toast }}</div>
+    </transition>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, computed } from 'vue'
-import { Message, Share, Document } from '@element-plus/icons-vue'
-import { useRouter } from 'vue-router';  // 导入 Vue Router
-import { defineProps } from 'vue';       // Composition API 的定义属性函数
-import { Sunny, Cloudy, MostlyCloudy, PartlyCloudy, Drizzling, Pouring, Moon, Lightning, Sunset, MoonNight } from '@element-plus/icons-vue';
-import TypingText from '@/components/typingText.vue';
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ref } from 'vue'
+import SiteNav from '@/components/SiteNav.vue'
+import AppIcon from '@/components/AppIcon.vue'
+import avatar from '@/components/images/PhoneBillCute.jpg'
+import { profile, about, experience, projects, skillGroups, alsoUsed, education, navSections } from '@/data/profile'
+import { useAucklandNow } from '@/composables/useAucklandNow'
+import { useScrollSpy } from '@/composables/useScrollSpy'
+import { useTyping } from '@/composables/useTyping'
 
-const myTexts = [
-  "Don't put off till tomorrow what should be done today.",
-  "The only way to do great work is to love what you do.",
-  "Success is not final, failure is not fatal: It is the courage to continue that counts."
-];
-const router = useRouter()
-const activeIndex = ref('/about-me')
-const currentTime = ref('')
-// const currentDate = ref('')
-const currentDate = ref(new Date());
+const { time, date, weather } = useAucklandNow({ timeZone: profile.timeZone, ...profile.coordinates })
+const { active, scrolled, progress, showTop } = useScrollSpy(navSections.map((section) => section.id))
+const typed = useTyping(profile.typing)
 
-const formattedDate = computed(() => {
-  return new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "2-digit",
-    weekday: "long",
-    year: "numeric",
-  }).format(currentDate.value);
-});
+const featured = projects.find((project) => project.featured)
+const otherProjects = projects.filter((project) => !project.featured)
+const year = new Date().getFullYear()
 
-
-
-// const updateDateTime = () => {
-//   const now = new Date()
-//   currentTime.value = now.toLocaleTimeString('zh-CN', {
-//     hour: '2-digit',
-//     minute: '2-digit',
-//     second: '2-digit',
-//     hour12: false
-//   })
-//   currentDate.value = now.toLocaleDateString('zh-CN', {
-//     year: 'numeric',
-//     month: '2-digit',
-//     day: '2-digit',
-//     weekday: 'long'
-//   })
-// }
-
-// 获取当前时间
-const updateTime = () => {
-  const now = new Date();
-  currentTime.value = now.toLocaleTimeString(); // 格式化时间为本地时间
-};
-
-onMounted(() => {
-  updateTime()
-  const timer = setInterval(updateTime, 1000)
-
-  onUnmounted(() => {
-    clearInterval(timer)
-  })
-})
-
-const handleNavigation = (link) => {
-  router.push(link)
+const activeSkill = ref(null)
+const selectSkill = (group, skill) => {
+  activeSkill.value = { group: group.title, ...skill }
 }
 
-// 时间和天气的响应式数据
-// const currentTime = ref('');
-const weatherInfo = ref('');
-const weatherIcon = ref(Sunny); // 默认使用 Sunny 图标
+const toast = ref('')
+let toastTimer = null
+const showToast = (message) => {
+  toast.value = message
+  clearTimeout(toastTimer)
+  toastTimer = setTimeout(() => (toast.value = ''), 2400)
+}
 
-// 获取当前小时
-const getCurrentHour = () => {
-  const date = new Date();
-  return date.getHours();
-};
-
-// 根据时间获取合适的图标
-const getTimeBasedIcon = () => {
-  const hour = getCurrentHour();
-
-  // 日间: 6 AM - 6 PM
-  if (hour >= 6 && hour < 18) {
-    return Sunny; // 白天使用 Sunny 图标
-  }
-
-  // 傍晚: 6 PM - 7 PM
-  if (hour >= 18 && hour < 19) {
-    return Sunset; // 傍晚使用 Sunset 图标
-  }
-
-  // 夜间: 7 PM - 6 AM
-  if (hour >= 19 || hour < 6) {
-    return MoonNight; // 夜间使用 MoonNight 图标
-  }
-
-  return Sunny; // 默认使用 Sunny 图标
-};
-
-// 城市经纬度
-const cityCoordinates = ref({ latitude: null, longitude: null });
-
-// 方法：跳转回首页
-const goBack = () => {
-  router.push('/homepage'); // 这里假设你的首页路由是 '/'
-};
-
-
-
-// 获取天气图标
-const getWeatherIcon = (weatherCode) => {
-  // 根据 Open-Meteo API 的 weathercode 映射选择图标
-  const iconMap = {
-    0: Sunny,            // 晴天
-    1: Cloudy,           // 多云
-    2: MostlyCloudy,     // 少云
-    3: PartlyCloudy,     // 部分多云
-    45: Cloudy,          // 大雾（用 Cloudy 替代 Foggy）
-    51: Drizzling,       // 小雨
-    53: Drizzling,       // 中雨
-    55: Pouring,         // 大雨
-    61: Drizzling,       // 小雨
-    63: Drizzling,       // 中雨
-    65: Pouring,         // 大雨
-    71: Drizzling,       // 小雪
-    73: Drizzling,       // 中雪
-    75: Pouring,         // 大雪
-    77: Drizzling,       // 雪粒
-    80: Pouring,         // 小雨阵
-    81: Pouring,         // 中雨阵
-    82: Pouring,         // 大雨阵
-    95: Lightning,       // 雷暴
-    96: Lightning,       // 雷暴伴有冰雹
-    99: Lightning,       // 强雷暴伴有冰雹
-    100: MoonNight,      // 夜晚（用 MoonNight 替代 Moon）
-    101: Sunset,         // 日落
-  };
-
-  if (weatherCode === 0 || weatherCode === 1) {
-    return getTimeBasedIcon();
-  }
-  return iconMap[weatherCode] || getTimeBasedIcon(); // 默认图标
-};
-
-// 获取天气信息
-const getWeather = async () => {
-  if (!cityCoordinates.value.latitude || !cityCoordinates.value.longitude) {
-    weatherInfo.value = '无法获取天气数据';
-    return;
-  }
-
-  const { latitude, longitude } = cityCoordinates.value;
-  const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`;
-
+const copied = ref(false)
+const copyEmail = async () => {
   try {
-    const response = await fetch(url);
-    const data = await response.json();
-    const temp = data.current_weather.temperature; // 当前温度
-    const weatherCode = data.current_weather.weathercode; // 天气代码
-
-    // 更新天气信息和图标
-    weatherInfo.value = `Weather: ${temp}°C`;
-    weatherIcon.value = getWeatherIcon(weatherCode); // 根据天气代码获取图标
-  } catch (error) {
-    weatherInfo.value = '天气获取失败';
+    await navigator.clipboard.writeText(profile.email)
+    copied.value = true
+    showToast('Email copied — ' + profile.email)
+    setTimeout(() => (copied.value = false), 2000)
+  } catch {
+    window.location.href = 'mailto:' + profile.email
   }
-};
+}
 
-// 获取用户的地理位置
-const getUserLocation = () => {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          cityCoordinates.value = { latitude, longitude }; // 保存经纬度
-          getWeather(); // 获取天气信息
-        },
-        (error) => {
-          console.error('获取地理位置失败', error);
-          weatherInfo.value = '无法获取用户位置';
-        }
-    );
-  } else {
-    weatherInfo.value = '浏览器不支持地理位置服务';
+const shareSite = async () => {
+  if (navigator.share) {
+    try {
+      await navigator.share({ title: 'Likai Xu — Full-Stack Developer', url: profile.siteUrl })
+    } catch {
+      // Visitor closed the share sheet.
+    }
+    return
   }
-};
+  try {
+    await navigator.clipboard.writeText(profile.siteUrl)
+    showToast('Link copied to clipboard')
+  } catch {
+    showToast('The link is ' + profile.siteUrl)
+  }
+}
 
-// 下载简历
-const downloadResume = () => {
-  window.open('https://cdn.likaixu.com/Likai%20Xu%20CV.pdf', '_blank');
-};
+const scrollToId = (id) => {
+  const el = document.getElementById(id)
+  if (!el) return
+  el.scrollIntoView({ block: 'start' })
+  history.replaceState(null, '', '#' + id)
+}
 
-// 跳转至Github
-const goToGithub = () => {
-  window.open('https://github.com/PhoneBill666', '_blank');
-};
-
-// 跳转至Linkedin
-const goToLinkedin = () => {
-  window.open('https://www.linkedin.com/in/likai-xu/', '_blank')
-};
-
-//邮箱
-const handleMessage = () => {
-  window.open('mailto:likaixu.official@gmail.com', '_blank')
-};
-
-// 分享网站
-const shareWebsite = () => {
-  const textToCopy = 'https://likaixu.com/';
-  navigator.clipboard.writeText(textToCopy).then(() => {
-    ElMessage.success("Link has been copied to the clipboard.");
-  }).catch(() => {
-    ElMessage.error("Copy failed, please copy manually.");
-  });
-};
-
-// 页面挂载后开始更新时间并获取用户位置
-onMounted(() => {
-  updateTime();
-  setInterval(updateTime, 1000); // 每秒更新时间
-  getUserLocation(); // 获取用户位置并查询天气
-
-});
+const toTop = () => {
+  window.scrollTo({ top: 0 })
+  history.replaceState(null, '', window.location.pathname)
+}
 </script>
 
 <style scoped>
-.homepage-container {
-  min-height: 100vh;
-  background-color: transparent;
-}
-
-.nav-menu {
+.skip-link {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  background-color: transparent !important;
-  border-bottom: none !important;
-  margin-top: 17px;
-  height: 45px;
-  display: flex;
-  justify-content: center;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+  top: 12px;
+  left: 12px;
+  z-index: 100;
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 600;
+  transform: translateY(-160%);
+  transition: transform 0.2s;
 }
 
-:deep(.el-menu) {
-  background-color: transparent !important;
-  border-bottom: none !important;
-  height: 45px;
+.skip-link:focus {
+  transform: none;
 }
 
-:deep(.el-menu-item) {
-  font-size: 28px;
-  font-weight: bold;
-  font-style: italic;
-  background-color: transparent !important;
-  color: #6f89aa !important;
-  height: 45px;
-  line-height: 45px;
-  padding: 0 20px;
-  white-space: nowrap;
-}
-
-:deep(.el-menu-item.is-active) {
-  color: #000000 !important;
-  border-bottom-color: #000000 !important;
-}
-
-:deep(.el-menu-item:hover) {
-  background-color: transparent !important;
-}
-
-.main-content {
-  padding-top: 80px;
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  padding-left: 20px;
-  padding-right: 20px;
-  gap: 40px;
-}
-
-.left-column {
-  flex: 1;
-  min-width: 0;
-  margin-top: 200px;
-}
-
-.right-column {
-  flex: 1;
-  min-width: 0;
-  margin-top: 80px;
-}
-
-.right-top-row {
-  display: flex;
-  gap: 20px;
-}
-
-.info-card {
-  width: 100%;
-  height: 200px;
-}
-
-.quote-box {
-  max-width: 320px;
-  height: 100px;
-}
-
-.profile-section {
-  display: flex;
-  flex-direction: column;
+/* ---------- Hero ---------- */
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.75fr);
   align-items: center;
-  gap: 20px;
-  flex: 1;
-  min-width: 0;
+  gap: clamp(32px, 6vw, 80px);
+  padding-top: calc(var(--nav-h) + 40px);
+  padding-bottom: 96px;
 }
 
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0.9rem 0.4rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--ink);
+  background: rgba(110, 231, 168, 0.1);
+  border: 1px solid rgba(110, 231, 168, 0.28);
+}
 
-.PhoneBill {
-  width: 60px;
-  height: 60px;
+.pulse {
+  position: relative;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  margin-bottom: 10px;
+  background: var(--ok);
+}
+
+.pulse::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid var(--ok);
+  animation: ping 2s ease-out infinite;
+}
+
+@keyframes ping {
+  from { transform: scale(0.6); opacity: 0.9; }
+  to { transform: scale(1.8); opacity: 0; }
+}
+
+.hero-title {
+  margin-top: 1.4rem;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(3.4rem, 9vw, 6.6rem);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  text-shadow: 0 6px 40px rgba(0, 0, 0, 0.35);
+}
+
+.hello {
+  display: block;
+  margin-bottom: 0.6rem;
+  font-family: var(--font-sans);
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--ink-3);
+}
+
+.dot {
+  color: var(--accent);
+}
+
+.hero-role {
+  margin-top: 1.2rem;
+  font-size: clamp(1.15rem, 2.2vw, 1.45rem);
+  font-weight: 500;
+  color: var(--ink);
+  min-height: 2.2em;
+}
+
+.typed {
+  color: var(--accent);
+}
+
+.caret {
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  margin-left: 3px;
+  vertical-align: -0.15em;
+  background: var(--accent);
+  animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+.hero-lead {
+  max-width: 54ch;
+  margin-top: 1rem;
+  font-size: 1.05rem;
+  color: var(--ink-2);
+}
+
+.hero-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.socials {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 1.5rem;
+}
+
+.hero-card {
+  padding: 1.5rem;
+}
+
+.card-top {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.avatar-ring {
+  padding: 3px;
+  border-radius: 50%;
+  background: conic-gradient(from 200deg, var(--accent), var(--sea), var(--accent));
   flex-shrink: 0;
 }
 
-.site-title {
-  font-size: clamp(28px, 4vw, 50px);
-  font-weight: bold;
+.avatar-ring img {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #0d1422;
+}
+
+.card-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.card-name span {
+  font-weight: 400;
+  color: var(--ink-3);
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.2rem;
+  font-size: 0.875rem;
+  color: var(--ink-3);
+}
+
+.now {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-top: 1.4rem;
+}
+
+.now-cell {
+  display: grid;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--line);
+}
+
+.now-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.now-value {
+  margin-top: 0.15rem;
+  font-size: 1.6rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.now-sub {
+  font-size: 0.8rem;
+  color: var(--ink-3);
+}
+
+.facts {
+  display: grid;
+  gap: 0.6rem;
+  margin-top: 1.25rem;
+}
+
+.facts li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px dashed var(--line);
+  font-size: 0.92rem;
+}
+
+.facts strong {
+  min-width: 2.6rem;
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--accent);
+}
+
+.quote {
+  display: grid;
+  gap: 0.15rem;
+  margin-top: 1.1rem;
+  font-size: 0.9rem;
+  color: var(--ink-3);
+}
+
+.quote em {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--sea);
+}
+
+.scroll-cue {
+  position: absolute;
+  left: 50%;
+  bottom: 28px;
+  width: 26px;
+  height: 42px;
+  margin-left: -13px;
+  border-radius: 999px;
+  border: 1.5px solid var(--line-strong);
+}
+
+.scroll-cue span {
+  position: absolute;
+  left: 50%;
+  top: 8px;
+  width: 4px;
+  height: 8px;
+  margin-left: -2px;
+  border-radius: 2px;
+  background: var(--ink-2);
+  animation: wheel 1.8s ease-in-out infinite;
+}
+
+@keyframes wheel {
+  0% { transform: translateY(0); opacity: 1; }
+  70% { transform: translateY(14px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 0; }
+}
+
+/* ---------- About ---------- */
+.about-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 64px);
+  align-items: start;
+}
+
+.about-copy p {
+  font-size: 1.05rem;
+}
+
+.about-copy p + p {
+  margin-top: 1.1rem;
+}
+
+.interests {
+  margin-top: 2rem;
+}
+
+.interests-label {
+  display: block;
+  margin-bottom: 0.7rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.chip-link {
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+
+.chip-link:hover {
+  color: var(--ink);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.strengths {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.strength {
+  padding: 1.35rem;
+  border-radius: var(--radius);
+}
+
+.strength:hover {
+  transform: translateY(-4px);
+}
+
+.strength-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.strength h3 {
+  margin-top: 0.9rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.strength p {
+  margin-top: 0.4rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+/* ---------- Experience ---------- */
+.timeline {
+  position: relative;
+  display: grid;
+  gap: 1.5rem;
+  padding-left: 2rem;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 6px;
+  width: 1px;
+  background: linear-gradient(180deg, var(--accent), var(--sea) 60%, transparent);
+}
+
+.timeline-item {
+  position: relative;
+}
+
+.timeline-dot {
+  position: absolute;
+  top: 30px;
+  left: calc(-2rem + 1px);
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 0 5px rgba(246, 178, 107, 0.15);
+}
+
+.job {
+  padding: clamp(1.25rem, 3vw, 2rem);
+}
+
+.job-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.job-head h3 {
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.job-role {
+  margin-top: 0.15rem;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.job-role span {
+  font-weight: 400;
+  color: var(--ink-3);
+}
+
+.period {
+  flex-shrink: 0;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--sea);
+  background: var(--sea-soft);
+}
+
+.job-summary {
+  margin-top: 1rem;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
   font-style: italic;
-  color: #ffffff;
+  line-height: 1.35;
+  color: var(--accent);
 }
 
-.quote-container {
-  background: rgba(255, 255, 255, 0.2);
-  /* backdrop-filter: blur(10px); */
-  padding: 20px;
-  border-radius: 15px;
-  /* text-align: center; */
-  /* max-width: 600px; */
+.points {
+  display: grid;
+  gap: 0.55rem;
+  margin: 1rem 0 1.25rem;
+}
+
+.points li {
+  position: relative;
+  padding-left: 1.2rem;
+}
+
+.points li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.68em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--sea);
+}
+
+.footnote {
+  margin-top: 1.5rem;
+  padding-left: 2rem;
+  font-size: 0.9rem;
+  color: var(--ink-3);
+}
+
+/* ---------- Projects ---------- */
+.featured {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(24px, 4vw, 48px);
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+.featured-tag,
+.project-kind {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.featured h3 {
+  margin-top: 0.6rem;
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 5vw, 3.4rem);
+  font-weight: 400;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.featured-kind {
+  margin-top: 0.6rem;
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.featured-role {
+  color: var(--ink-3);
+  font-size: 0.92rem;
+}
+
+.featured-summary {
+  margin: 1rem 0 1.25rem;
+}
+
+.featured-link {
+  margin-top: 1.5rem;
+}
+
+.featured-points {
+  display: grid;
+  gap: 0.9rem;
+  align-content: start;
+}
+
+.featured-points li {
   display: flex;
-  /* align-items: center; */
-  justify-content: center;
+  gap: 0.75rem;
+  font-size: 0.95rem;
+}
+
+.featured-points li :deep(svg) {
+  margin-top: 0.2em;
+  color: var(--ok);
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.project {
+  display: flex;
   flex-direction: column;
-  transition: transform 0.3s ease;
+  padding: 1.5rem;
+  border-radius: var(--radius);
 }
 
-.quote-container:hover {
-  background: rgba(255, 255, 255, 0.3);
-  /* transition: all 0.3s ease; */
-  transform: translateY(-5px);
+.project:hover {
+  transform: translateY(-4px);
 }
 
-.quote-text {
-  font-size: 20px;
-  color: #ffffff;
-  margin-bottom: 10px;
+.project h3 {
+  margin-top: 0.4rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--ink);
 }
 
-.quote-author {
-  text-align: right;
-  font-size: 16px;
-  color: rgba(255, 255, 255, 0.8);
+.project p {
+  margin: 0.5rem 0 1rem;
+  font-size: 0.95rem;
 }
 
-.info-section {
-  text-align: center;
-  display: flex;
+.project-link {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  flex: 1;
-  min-width: 0;
+  gap: 0.3rem;
+  margin-top: auto;
+  padding-top: 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent);
 }
 
-.datetime-weather {
-  background: rgba(255, 255, 255, 0.2);
-  /* backdrop-filter: blur(10px); */
-  padding: 20px;
-  border-radius: 15px;
-  font-size: 20px;
-  color: white;
-  font-style: italic;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.3s ease;
+.project-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
-.datetime-weather:hover {
-  background: rgba(255, 255, 255, 0.3);
-  /* transition: all 0.3s ease; */
-  transform: translateY(-5px);
+/* ---------- Skills ---------- */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1rem;
 }
 
-.time {
-  font-size: 48px;
-  font-weight: bold;
-  color: #ffffff;
-}
-
-.date, .weather {
-  font-size: 16px;
-  color: rgba(255, 255, 255, 0.8);
-  margin-top: 10px;
-}
-
-
-.nav-section h3 {
-  color: #ffffff;
-  margin-bottom: 10px;
-  font-size: 20px;
-}
-
-.tools-grid {
-  display: flex;
-  gap: 20px;
-}
-
-.tools-placeholder-column {
+.skill-group {
   display: flex;
   flex-direction: column;
-  gap: 40px;
-  flex: 1;
-  min-width: 0;
+  grid-column: span 2;
+  padding: 1.35rem;
+  border-radius: var(--radius);
 }
 
-.tools-placeholder-card {
-  height: 185px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* 3 + 2 layout: the last two groups share the second row. */
+.skill-group:nth-child(n + 4) {
+  grid-column: span 3;
 }
 
-
-.resume-card {
-  justify-content: center;
+.skill-group h3 {
+  margin-bottom: 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
 }
 
-.tools-music {
-  flex: 1;
-  min-width: 0;
-}
-
-.nav-card {
-  background: rgba(255, 255, 255, 0.2) !important;
-  /* backdrop-filter: blur(10px); */
-  border: none !important;
+.skill-chip {
+  font-size: 0.875rem;
+  padding: 0.38rem 0.8rem;
   cursor: pointer;
-  transition: transform 0.3s ease;
+  transition: color 0.2s, border-color 0.2s, background 0.2s, transform 0.2s var(--ease);
 }
 
-.nav-card:hover {
-  transform: translateY(-5px);
+.skill-chip:hover,
+.skill-chip.active {
+  color: var(--accent-ink);
+  background: var(--accent);
+  border-color: var(--accent);
+  transform: translateY(-1px);
 }
 
-.card-content {
+.used-in {
+  margin-top: auto;
+  padding-top: 0.9rem;
+  min-height: 2.4em;
+  font-size: 0.85rem;
+  color: var(--ink-3);
+}
+
+.used-in strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.also-used {
+  margin-top: 1.25rem;
+  font-size: 0.9rem;
+  color: var(--ink-3);
+}
+
+.also-used span {
+  color: var(--ink-2);
+}
+
+/* ---------- Education ---------- */
+.edu-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.edu {
+  padding: clamp(1.4rem, 3vw, 2rem);
+  border-radius: var(--radius);
+}
+
+.edu h3 {
+  margin-top: 0.9rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.edu-degree {
+  color: var(--ink-2);
+}
+
+.edu-highlight {
+  display: inline-block;
+  margin: 0.9rem 0 1rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.edu .period {
+  display: inline-block;
+}
+
+/* ---------- Contact ---------- */
+.contact {
+  padding: clamp(2rem, 6vw, 4rem);
+  text-align: center;
+  background:
+    radial-gradient(600px circle at 50% -20%, rgba(246, 178, 107, 0.18), transparent 70%),
+    var(--glass);
+}
+
+.contact .eyebrow {
+  justify-content: center;
+}
+
+.contact .section-title {
+  font-size: clamp(2.8rem, 7vw, 4.6rem);
+}
+
+.contact .section-lead {
+  margin-inline: auto;
+}
+
+.email-row {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   align-items: center;
-  gap: 10px;
-  padding: 20px;
-  color: #ffffff;
+  gap: 0.75rem;
+  margin-top: 2rem;
 }
 
-.card-content i {
-  font-size: 24px;
+.email {
+  font-size: clamp(1.1rem, 3vw, 1.6rem);
+  font-weight: 600;
+  color: var(--ink);
+  border-bottom: 1px solid var(--accent);
+  word-break: break-all;
+  transition: color 0.2s;
 }
 
-:deep(.el-card) {
-  border: none;
-  background-color: transparent;
-  color: #ffffff;
+.email:hover {
+  color: var(--accent);
 }
 
-.gradient-text1 {
-  font-weight: bold;
-  background: linear-gradient(135deg, #4879a4 0%, #716dbb 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+.contact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 2rem;
 }
 
-.gradient-text2 {
-  background: linear-gradient(135deg, #716dbb 0%, #9961d1 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+.contact-time {
+  margin-top: 1.75rem;
+  font-size: 0.9rem;
+  color: var(--ink-3);
 }
 
-/* 平板适配 */
-@media (max-width: 1024px) {
-  .main-content {
+.contact-time strong {
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Footer & floating UI ---------- */
+.footer {
+  display: grid;
+  gap: 0.4rem;
+  padding: 2rem 0 6.5rem;
+  border-top: 1px solid var(--line);
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--ink-3);
+}
+
+.footer-quote em {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  color: var(--sea);
+}
+
+.footer a {
+  color: var(--ink-2);
+}
+
+.footer a:hover {
+  color: var(--accent);
+}
+
+.to-top {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 40;
+  width: 48px;
+  height: 48px;
+  background: rgba(10, 15, 26, 0.74);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 88px;
+  z-index: 60;
+  padding: 0.7rem 1.1rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--accent-ink);
+  background: var(--accent);
+  box-shadow: var(--shadow);
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.25s, transform 0.25s var(--ease);
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.toast-enter-active,
+.toast-leave-active {
+  transition: opacity 0.25s, transform 0.25s var(--ease);
+}
+
+.toast-enter-from,
+.toast-leave-to {
+  opacity: 0;
+  transform: translate(-50%, 10px);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 960px) {
+  .hero {
+    grid-template-columns: 1fr;
+    padding-top: calc(var(--nav-h) + 48px);
+    padding-bottom: 120px;
+  }
+
+  .hero-card {
+    max-width: 520px;
+  }
+
+  .about-grid,
+  .featured,
+  .edu-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .skills-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .skill-group,
+  .skill-group:nth-child(n + 4) {
+    grid-column: span 1;
+  }
+
+  .skill-group:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 640px) {
+  .strengths,
+  .project-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .job-head {
     flex-direction: column;
-    padding-top: 70px;
-    gap: 20px;
+    gap: 0.6rem;
   }
 
-  .left-column {
-    margin-top: 20px;
+  .timeline {
+    padding-left: 1.4rem;
   }
 
-  .right-column {
-    margin-top: 0;
-  }
-}
-
-/* 移动端适配 */
-@media (max-width: 768px) {
-  .nav-menu {
-    margin-top: 5px;
-    justify-content: flex-start;
+  .timeline-dot {
+    left: calc(-1.4rem + 1px);
   }
 
-  :deep(.el-menu-item) {
-    font-size: 18px;
-    padding: 0 10px;
+  .footnote {
+    padding-left: 0;
   }
 
-  .main-content {
-    flex-direction: column;
-    padding: 60px 15px 30px;
-    gap: 15px;
+  .hero-cta .btn {
+    flex: 1 1 auto;
   }
 
-  .left-column {
-    margin-top: 10px;
+  .section-title br {
+    display: none;
   }
 
-  .right-column {
-    margin-top: 0;
-  }
-
-  .site-title {
-    font-size: 28px;
-  }
-
-  .right-top-row {
-    flex-direction: column;
-  }
-
-  .info-card {
-    height: auto;
-    min-height: 150px;
-  }
-
-  .quote-box {
-    max-width: 100%;
-  }
-
-  .tools-grid {
-    flex-direction: column;
-  }
-
-  .tools-placeholder-column {
-    flex-direction: row;
-    gap: 15px;
-  }
-
-  .tools-placeholder-card {
-    height: 120px;
-  }
-
-  .time {
-    font-size: 36px;
-  }
-
-  .datetime-weather {
-    font-size: 16px;
+  .to-top {
+    right: 12px;
+    bottom: 12px;
   }
 }
-
-/* #716dbb */
 </style>

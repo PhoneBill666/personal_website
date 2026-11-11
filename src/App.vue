@@ -1,50 +1,20 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-import BubbleBackground from "@/components/BubbleBackground.vue";
-import NewBackground from "@/components/newBackground.vue";
-import { onMounted } from 'vue'
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import SiteBackground from '@/components/newBackground.vue'
+import MiniPlayer from '@/components/MiniPlayer.vue'
 
-onMounted(() => {
-  document.title = "LikaiXu Website"
-})
+const route = useRoute()
+// The music page has its own artwork and full player.
+const isMusicPage = computed(() => route.name === 'music')
 </script>
 
 <template>
-<div id="app" style="background-color: transparent; min-height: 100vh; width: 100%;">
-<!--  <div>-->
-<!--    &lt;!&ndash; <BubbleBackground /> &ndash;&gt;-->
-<!--    <NewBackground />-->
-<!--  </div>-->
-  <div v-if="$route.path === '/music'">
-
-  </div>
-  <div v-else>
-    <NewBackground />
-  </div>
-<!--  <nav>-->
-<!--    <ul>-->
-<!--      <li><router-link to="/">Welcome</router-link></li>-->
-<!--      <li><router-link to="/homepage">Homepage</router-link></li>-->
-<!--    </ul>-->
-<!--  </nav>-->
-  <router-view />  <!-- 路由的显示位置 -->
-</div>
+  <SiteBackground v-if="!isMusicPage" />
+  <router-view v-slot="{ Component }">
+    <transition name="page" mode="out-in">
+      <component :is="Component" />
+    </transition>
+  </router-view>
+  <MiniPlayer v-if="!isMusicPage" />
 </template>
-
-<style scoped>
-
-header {
-  line-height: 1.5;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-}
-
-</style>
