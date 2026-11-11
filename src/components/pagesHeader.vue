@@ -167,7 +167,9 @@ const getUserLocation = () => {
 onMounted(() => {
   updateTime();
   setInterval(updateTime, 1000); // 每秒更新时间
-  getUserLocation(); // 获取用户位置并查询天气
+  // 固定显示奥克兰天气，不再向访客请求定位权限
+  cityCoordinates.value = { latitude: -36.8485, longitude: 174.7633 };
+  getWeather();
 });
 </script>
 
